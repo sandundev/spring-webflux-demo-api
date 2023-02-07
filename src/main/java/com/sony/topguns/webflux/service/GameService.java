@@ -56,13 +56,18 @@ public class GameService {
 
     public Flux<Game> getAllCustomers() {
         return Flux.fromIterable(games)
-                .delayElements(Duration.ofSeconds(1)).log();
+                .delaySubscription(Duration.ofSeconds(5))
+                .log();
+//        return Flux.fromIterable(games)
+//                .delayElements(Duration.ofSeconds(1)).log();
     }
+
     public Mono<Game> getById(Integer id) {
         return Mono.from(games.stream()
-                .filter(game -> game.getId().equals(id))
-                .findFirst()
-                .map(Mono::just)
-                .orElseGet(Mono::empty));
+                        .filter(game -> game.getId().equals(id))
+                        .findFirst()
+                        .map(Mono::just)
+                        .orElseGet(Mono::empty))
+                .delayElement(Duration.ofSeconds(1));
     }
 }
